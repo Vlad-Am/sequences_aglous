@@ -58,25 +58,22 @@ class FileAlgous:
             # список, если секвенции с таким именем не было берем дефолтное значение []
             list_files_sequence = dict_of_sequence.get(name_sequence_length, [])
             # если имя секвенции уже в словаре, добавляем в список по значению этого словаря путь до файла
-            dict_of_sequence[name_sequence_length] = list_files_sequence + [file]
+            dict_of_sequence[name_sequence_length] = list_files_sequence + [name_sequence, padding_sequence]
 
-        try:
-            for name_seq, list_path in dict_of_sequence.items():
-                with open(f"{name_seq}.txt", 'a') as file:
-                    for item in list_path:
-                        file.write(f"file {item}\n")
-            os.system(f"ffmpeg -f concat -safe 0 -i {name_seq}.txt {name_seq}.mp4")
-        except Exception as e:
-            print(e)
+        for name_seq, list_path in dict_of_sequence.items():
+            with open(f"{name_seq}.txt", 'a') as file:
+                file.write(f"file {name_sequence}\n")
+        os.system(f"ffmpeg -framerate 24 -start_number 1001 -i 'flag_%04d.jpg' flag_test1.mov")
 
     def union_jpg_to_video_foo(self):
         """Функция объединяющая jpg в видео"""
         for k, v in self.choice_sequence().items():
             for path in v:
-                os.system(f"ffmpeg - framerate 24 - i {k}_%{v} - pix_fmt yuv420p {k}.mp4")
+                os.system(f"ffmpeg -framerate 24 - i {k}_%{v} - pix_fmt yuv420p {k}.mp4")
 
 
 test = FileAlgous("C:/Users/vlad/Desktop/work/Test_algous/source")
 test.choice_sequence()
 #
 # os.system(f"ffmpeg - i flag_%04.jpg output.mp4")
+# ffmpeg -framerate 24 -start_number 1001 -i "flag_%04d.jpg" flag_test1.mov
