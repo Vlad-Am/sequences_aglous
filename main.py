@@ -1,8 +1,8 @@
 import glob
-import json
 import os
 import re
-import ffmpeg
+
+from dotenv import load_dotenv
 
 
 class FileAlgous:
@@ -11,18 +11,18 @@ class FileAlgous:
         self.files = self.scan_directory()
 
     def scan_directory(self) -> list[str]:
-        """Cканирует директорию и возвращает список всех объектов .jpg"""
+        """Cканирует директорию и возвращает путь до всех объектов от папки входа список всех объектов .jpg"""
 
-        files_in_dir = glob.glob(self.path + '/**/*.jpg', recursive=True)
+        files_in_dirs = glob.glob(self.path + '/**/*.jpg', recursive=True)
         # directory_path/     the dir
         # **/       every file and dir under my_path
         # *.txt     every file that ends with '.jpg'
 
-        return files_in_dir
+        return files_in_dirs
 
-    # files1 = scan_directory("C:/Users/vlad/Desktop/work/Test_algous/source")
 
-    # print(files1)
+
+
 
     @staticmethod
     def split_path_name_to_sequence_and_padding(path_name) -> tuple[str, str]:
@@ -37,13 +37,6 @@ class FileAlgous:
         name_sequence, padding_sequence = padding_sequence_reversed[::-1], name_sequence_reversed[::-1]
 
         return name_sequence, padding_sequence
-
-    # a = 'C:/Users/vlad/Desktop/work/Test_algous/source\\flag\\rain_v01\\rain_v01_001080.jpg'
-    # b = "C:/Users/vlad/Desktop/work/Test_algous/source\\fire\\one\\two\\tree\\fire_long\\fire.00007897.jpg"
-    # c = [a, b]
-    # print(split_path_name_to_sequence_and_padding(c))
-
-    # print(re.split("\.|_|/", b))
 
     def choice_sequence(self) -> dict[str, list[str]]:
         """Функция определяющая к какой секвенции отнести изображение"""
@@ -62,9 +55,11 @@ class FileAlgous:
 
         for name_seq, list_path in dict_of_sequence.items():
             os.system(
-                f"""ffmpeg -framerate 24 -start_number {list_path[1]} -i '{name_seq}_%0{len(list_path[1])}d.jpg' {name_seq}.mov""")
+                f"""ffmpeg -framerate 24 -start_number {int(list_path[1])} -i '{name_seq[0:-1]}_%0{len(list_path[1])}d.jpg' {name_seq}.mov""")
 
 
-PATH = "C:/Users/vlad/Desktop/work/Test_algous/source"
-algous = FileAlgous(PATH)
-algous.choice_sequence()
+if __name__ == '__main__':
+
+    load_dotenv()
+    FileAlgous(os.environ.get('PATH_TO_IMAGES')).choice_sequence()
+
