@@ -1,7 +1,6 @@
 import glob
 import os
 import re
-
 from dotenv import load_dotenv
 
 
@@ -19,10 +18,6 @@ class FileAlgous:
         # *.txt     every file that ends with '.jpg'
 
         return files_in_dirs
-
-
-
-
 
     @staticmethod
     def split_path_name_to_sequence_and_padding(path_name) -> tuple[str, str]:
